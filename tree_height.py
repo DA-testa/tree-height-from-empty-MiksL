@@ -1,18 +1,24 @@
-# python3
-
 import sys
 import threading
 import numpy
 
-# Constraints: - 1 <= n <= 10^5
-# Memory limit: 512MB
 def compute_height(n, parents):
-    # Write this function
-    max_height = 0
-    # recursion will be used to find the height of the tree
+    maxHeight = 0 # The maximum height reached by the tree
     
-    return max_height
-
+    # Use recursion to traverse up the tree and check the height of each node, if the height is greater than the current max height then we set the max height to the new height
+    def traverseUp(node, height):
+        nonlocal maxHeight # Nonlocal variable is declared so we can change maxHeight once we find a new maximum height/depth
+        if(parents[node] == -1): # If the node does not have a parent we return
+            if(height > maxHeight): # If the height is greater than the current max height then we set the max height to the new height
+                maxHeight = height
+            return
+        traverseUp(parents[node], height + 1) # Recursively traverse up the tree, looking for the parent of the current node
+        
+    for node in range(n): # For each node in the tree we traverse up the tree to find the height of the node
+        traverseUp(node, 1)
+    
+    return maxHeight
+# Time complexity O(n^2)
 
 def main():
     print("File type input")
