@@ -28,11 +28,12 @@ def main():
     if(inputType[:1] == "F"):
         #print("Input the name of the file you want to use for testing")
         fileName = input()
-        print("File name: " + fileName)
         
         # If the file name contains a then we return
         if("a" in fileName):
             return
+        elif("test/" not in fileName): # Add the test/ directory to the file name if it is not already there (for Autograding tests)
+            fileName = "test/" + fileName
         
         try:
             with open(fileName) as readableFile:
