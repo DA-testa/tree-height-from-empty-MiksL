@@ -3,22 +3,27 @@ import threading
 import numpy
 
 def compute_height(n, parents):
-    maxHeight = 0 # The maximum height reached by the tree
+    visitedNodeHeight = [-1] * n  # List of the heights of the nodes
     
-    # Use recursion to traverse up the tree and check the height of each node, if the height is greater than the current max height then we set the max height to the new height
-    def traverseUp(node, height):
-        nonlocal maxHeight # Nonlocal variable is declared so we can change maxHeight once we find a new maximum height/depth
-        if(parents[node] == -1): # If the node does not have a parent we return
-            if(height > maxHeight): # If the height is greater than the current max height then we set the max height to the new height
-                maxHeight = height
-            return
-        traverseUp(parents[node], height + 1) # Recursively traverse up the tree, looking for the parent of the current node
+    def getHeight(node): # Recursive function to get the height of a node
+        if visitedNodeHeight[node] != -1: # If the node has been visited, the height of the node is returned
+            return visitedNodeHeight[node]
         
-    for node in range(n): # For each node in the tree we traverse up the tree to find the height of the node
-        traverseUp(node, 1)
+        parentNode = parents[node] # Gets the parent node of the current node
+        
+        if parentNode == -1: # Checks if the parent node is the root node
+            visitedNodeHeight[node] = 1
+        else: # If the parent node is not the root node, the height of the current node is 1 + the height of the parent node
+            visitedNodeHeight[node] = 1 + getHeight(parentNode) # Recursively call the getHeigth function
+        return visitedNodeHeight[node]
     
+    maxHeight = 0
+    for node in range(n): # Loops through all the nodes in the tree
+        if visitedNodeHeight[node] == -1: # Get the height of the node only if it has not been visited yet
+            if(maxHeight < getHeight(node)): # If the height of the current node is greater than the current max height, then the current node's height is set as the new max height
+                maxHeight = getHeight(node)
+                
     return maxHeight
-# Time complexity O(n^2)
 
 def main():
     print("File type input")
